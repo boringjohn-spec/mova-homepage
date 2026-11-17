@@ -24,5 +24,6 @@ open index.html
 ## Credits
 
 - Original design and interactions: [Revolut](https://www.revolut.com/)
+- Footer layout ideas: [Good Fella](https://good-fella.com/) and [Isidor](https://www.isidor.ai/). The currency-glyph wordmark is original to this project.
 - Photos: [Pexels](https://www.pexels.com/), see [CREDITS.md](CREDITS.md)
 - Fonts: [Geist](https://vercel.com/font) and [Inter](https://rsms.me/inter/) from Google Fonts
