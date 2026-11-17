@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mova | Money, unbound</title>
+  <meta name="description" content="Mova is a fictional digital bank built as a design exercise." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr is-over" id="hdr">
+  <div class="hdr__in container">
+    <a href="#" class="logo" aria-label="Mova home">
+      <svg class="logo__mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M4 22V6h3.6l6.4 8.6L20.4 6H24v16h-3.4V11.9l-6.6 8.7-6.6-8.7V22z" fill="currentColor"/></svg>
+      <span>mova</span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#" class="nav__link is-active">Personal</a>
+      <a href="#" class="nav__link">Business</a>
+      <div class="nav__dd">
+        <button class="nav__link nav__ddbtn" aria-expanded="false" aria-controls="dd-family">Family
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="dd" id="dd-family" role="menu">
+          <a href="#" class="dd__item" role="menuitem"><span class="dd__ico">👋</span><span><b>Mova Teen</b><em>An account for ages 13–17, with guardians in the loop</em></span></a>
+          <a href="#" class="dd__item" role="menuitem"><span class="dd__ico">🎒</span><span><b>Mova Kids</b><em>Pocket money, chores and a first card for ages 6–12</em></span></a>
+          <a href="#" class="dd__item" role="menuitem"><span class="dd__ico">🏡</span><span><b>Family plan</b><em>One subscription that covers up to five people</em></span></a>
+        </div>
+      </div>
+      <a href="#" class="nav__link">Company</a>
+    </nav>
+
+    <div class="hdr__actions">
+      <a href="#" class="btn btn--ghost">Log in</a>
+      <a href="#" class="btn btn--dark hdr__signup" data-app-modal><span class="btn__fx"></span><span>Sign up</span></a>
+    </div>
+
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile menu -->
+<div class="mnav" id="mnav" aria-hidden="true">
+  <nav class="mnav__links container" aria-label="Mobile">
+    <a href="#">Personal</a>
+    <a href="#">Business</a>
+    <a href="#">Family</a>
+    <a href="#">Company</a>
+    <a href="#">Help</a>
+  </nav>
+  <div class="mnav__cta container">
+    <a href="#" class="btn btn--light-outline">Log in</a>
+    <a href="#" class="btn btn--dark" data-app-modal><span class="btn__fx"></span><span>Sign up</span></a>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ HERO → PAYDAY (scroll-triggered morph) ============ -->
+  <section class="hero" id="hero" aria-label="Introduction">
+
+    <!-- side cards sit UNDER the full-bleed media -->
+    <div class="stage stage--sides" aria-hidden="true">
+      <div class="pcard pcard--side pcard--l">
+        <div class="pscene"><img class="scene-img" src="assets/img/card-cafe.jpg" alt="" width="800" height="1067" /></div>
+        <div class="cui">
+          <span class="cui__label">Euro · EUR</span>
+          <span class="cui__amount">€3,126</span>
+          <span class="cui__pill">Accounts</span>
+          <div class="cui__tx"><span class="cui__txico">☕</span><span class="cui__txname">Café Lumière<em>Today, 08:14</em></span><b>−€4.20</b></div>
+        </div>
+      </div>
+      <div class="pcard pcard--side pcard--r">
+        <div class="pscene"><img class="scene-img scene-img--dusk" src="assets/img/card-dusk.jpg" alt="" width="800" height="1200" /></div>
+        <div class="cui">
+          <span class="cui__label">Joint · GBP</span>
+          <span class="cui__amount">£2,350</span>
+          <span class="cui__pill">Accounts</span>
+          <div class="cui__tx"><span class="cui__txico">🛒</span><span class="cui__txname">Greengrocer<em>Yesterday</em></span><b>−£34.10</b></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- full-bleed media that shrinks into the centre card -->
+    <div class="hero__media" aria-hidden="true">
+      <div class="hero__scene">
+        <img class="scene-img scene-img--hero" src="assets/img/hero-sky.jpg" alt="" width="2400" height="1600" fetchpriority="high" />
+      </div>
+    </div>
+
+    <!-- centre card: outline + balance UI, ABOVE the media -->
+    <div class="stage stage--center" aria-hidden="true">
+      <div class="pcard pcard--c">
+        <span class="pcard__outline"></span>
+        <div class="cui cui--center">
+          <span class="cui__label">Personal · GBP</span>
+          <span class="cui__amount">£6,012<small>.48</small></span>
+          <span class="cui__pill">Accounts</span>
+          <div class="cui__badges">
+            <span class="cbadge"><svg viewBox="0 0 12 12"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="2.5" y="5.5" width="7" height="5" rx="1.2" fill="currentColor"/></svg>Protected</span>
+            <span class="cbadge cbadge--light">Deposits insured<br/>up to £85k*</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__copy container">
+      <h1 class="h1">Money, Unbound</h1>
+      <p class="lede">Spend, save and send from one app, at home or abroad. Open an account in minutes, for free.</p>
+      <a href="#" class="btn btn--dark" data-app-modal><span class="btn__fx"></span><span>Get the app</span></a>
+    </div>
+
+    <div class="salary__copy container">
+      <h2 class="h2">Payday, upgraded</h2>
+      <p class="body">Get paid up to two days early, split your pay into pockets automatically and let every spare penny earn, all inside one Mova account.</p>
+      <a href="#" class="btn btn--dark"><span class="btn__fx"></span><span>Switch your pay</span></a>
+    </div>
+  </section>
+
+  <!-- ============ TRUST BAR ============ -->
+  <!-- Placeholder recognitions for a fictional brand -->
+  <section class="trust container">
+    <h2 class="trust__title" data-in>Trusted by 40+ million people across 38 countries</h2>
+    <ul class="trust__row trust__row--4">
+      <li data-in style="--i:0"><figure>
+        <div class="trust__art"><svg viewBox="0 0 120 64"><rect x="18" y="10" width="40" height="44" rx="11" fill="#1f1f1f"/><path d="M38 21v16m-7-6 7 7 7-7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="64" y="10" width="40" height="44" rx="11" fill="none" stroke="#1f1f1f" stroke-width="3"/><text x="84" y="39" text-anchor="middle" font-family="Geist, sans-serif" font-weight="600" font-size="17" fill="#1f1f1f">#2</text></svg></div>
+        <figcaption>#2 finance app in 12 markets</figcaption></figure></li>
+      <li data-in style="--i:1"><figure>
+        <div class="trust__art"><svg viewBox="0 0 160 64"><g fill="#1f1f1f">
+          <path id="st" d="M16 18l4.1 8.4 9.2 1.3-6.6 6.5 1.6 9.2-8.3-4.4-8.3 4.4 1.6-9.2-6.6-6.5 9.2-1.3z"/>
+          <use href="#st" x="32"/><use href="#st" x="64"/><use href="#st" x="96"/></g>
+          <path d="M144 18l4.1 8.4 9.2 1.3-6.6 6.5 1.6 9.2-8.3-4.4-8.3 4.4 1.6-9.2-6.6-6.5 9.2-1.3z" fill="#1f1f1f" opacity=".35"/></svg></div>
+        <figcaption>4.8 average rating from 2M+ reviews</figcaption></figure></li>
+      <li data-in style="--i:2"><figure>
+        <div class="trust__art"><svg viewBox="0 0 120 72"><g fill="none" stroke="#1f1f1f" stroke-width="2.4" stroke-linecap="round"><path d="M40 62C24 54 20 34 28 16"/><path d="M80 62c16-8 20-28 12-46"/></g><g fill="#1f1f1f"><ellipse cx="25" cy="44" rx="6" ry="3" transform="rotate(-50 25 44)"/><ellipse cx="24" cy="31" rx="6" ry="3" transform="rotate(-80 24 31)"/><ellipse cx="29" cy="20" rx="6" ry="3" transform="rotate(-110 29 20)"/><ellipse cx="95" cy="44" rx="6" ry="3" transform="rotate(50 95 44)"/><ellipse cx="96" cy="31" rx="6" ry="3" transform="rotate(80 96 31)"/><ellipse cx="91" cy="20" rx="6" ry="3" transform="rotate(110 91 20)"/></g><text x="60" y="36" text-anchor="middle" font-family="Geist, sans-serif" font-weight="600" font-size="11" fill="#1f1f1f">DIGITAL</text><text x="60" y="49" text-anchor="middle" font-family="Geist, sans-serif" font-weight="600" font-size="11" fill="#1f1f1f">BANK ’26</text></svg></div>
+        <figcaption>Digital Bank of the Year 2026</figcaption></figure></li>
+      <li data-in style="--i:3"><figure>
+        <div class="trust__art"><svg viewBox="0 0 120 72"><path d="M48 46l-8 22 10-5 6 8 4-22m12-3 8 22-10-5-6 8-4-22" fill="#1f1f1f"/><circle cx="60" cy="30" r="24" fill="#1f1f1f"/><circle cx="60" cy="30" r="18" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 3"/><text x="60" y="35" text-anchor="middle" font-family="Geist, sans-serif" font-weight="600" font-size="14" fill="#fff">TOP 10</text></svg></div>
+        <figcaption>Top 10 global neobanks list</figcaption></figure></li>
+    </ul>
+    <ul class="trust__row trust__row--3">
+      <li data-in style="--i:0"><figure>
+        <div class="trust__art trust__art--tall"><svg viewBox="0 0 80 80"><rect x="6" y="6" width="68" height="68" rx="14" fill="#e8f0e9"/><circle cx="40" cy="36" r="14" fill="#c9a24a"/><path d="M33 50l-4 14 11-6 11 6-4-14" fill="#c9a24a"/><path d="M34 36l4 4 8-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <figcaption>Customer Choice Award: Gold</figcaption></figure></li>
+      <li data-in style="--i:1"><figure>
+        <div class="trust__art trust__art--tall"><svg viewBox="0 0 80 80"><rect x="6" y="6" width="68" height="68" rx="14" fill="#1f1f1f"/><path d="M40 18l18 7v13c0 12-8 20-18 24-10-4-18-12-18-24V25z" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M32 40l6 6 11-12" stroke="#7ee0a8" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <figcaption>Fair Fees Mark 2026</figcaption></figure></li>
+      <li data-in style="--i:2"><figure>
+        <div class="trust__art trust__art--tall"><svg viewBox="0 0 80 80"><rect x="6" y="6" width="68" height="68" rx="14" fill="#e6eefb"/><circle cx="40" cy="40" r="20" fill="none" stroke="#2f5fb0" stroke-width="2.4"/><path d="M20 40h40M40 20c-7 6-7 34 0 40m0-40c7 6 7 34 0 40" fill="none" stroke="#2f5fb0" stroke-width="2.4"/></svg></div>
+        <figcaption>Best Travel Money Card 2026</figcaption></figure></li>
+    </ul>
+  </section>
+
+  <!-- ============ SAVINGS (dark · clip-to-card morph) ============ -->
+  <section class="dsec dsec--clip" id="save" data-morph="clip" aria-label="Savings">
+    <div class="dsec__media" aria-hidden="true">
+      <div class="dsec__scenes">
+        <div class="scene is-active" data-pane="0"><img class="scene-img scene-img--travel" src="assets/img/save-travel.jpg" alt="" width="2200" height="1650" loading="lazy" /></div>
+        <div class="scene" data-pane="1"><img class="scene-img scene-img--home" src="assets/img/save-home.jpg" alt="" width="2200" height="1466" loading="lazy" /></div>
+        <div class="scene" data-pane="2"><img class="scene-img scene-img--celebrate" src="assets/img/save-celebrate.jpg" alt="" width="2200" height="1466" loading="lazy" /></div>
+      </div>
+    </div>
+
+    <div class="dsec__inner">
+      <div class="dsec__copy" data-reveal>
+        <h2 class="h2">Savings for every plan</h2>
+        <p class="body">Earn up to 4.10% AER (variable) on Instant Savings, with interest added to your balance every single day.¹</p>
+        <p class="fine">Rate shown is for the Apex plan; other plans earn different rates. AER shows what you’d earn over a year with interest compounding. Interest may be taxable. Plan fees and terms apply.</p>
+      </div>
+      <a href="#" class="btn btn--light" data-reveal><span class="btn__fx"></span><span>See savings options</span></a>
+
+      <div class="dsec__card">
+        <div class="dsec__ui">
+          <div class="sui is-active" data-pane="0">
+            <span class="sui__goal">Lisbon getaway</span>
+            <span class="sui__amt">£1,326</span>
+            <span class="cui__pill">Savings</span>
+            <div class="sui__bar"><i style="--p:66%"></i></div>
+            <span class="sui__of">66% of £2,000</span>
+            <div class="sui__acts"><span>+</span><span>↻</span><span>⋯</span></div>
+          </div>
+          <div class="sui" data-pane="1">
+            <span class="sui__goal">First home fund</span>
+            <span class="sui__amt">£18,450</span>
+            <span class="cui__pill">Savings</span>
+            <div class="sui__bar"><i style="--p:41%"></i></div>
+            <span class="sui__of">41% of £45,000</span>
+            <div class="sui__acts"><span>+</span><span>↻</span><span>⋯</span></div>
+          </div>
+          <div class="sui" data-pane="2">
+            <span class="sui__goal">The big day</span>
+            <span class="sui__amt">£6,780</span>
+            <span class="cui__pill">Savings</span>
+            <div class="sui__bar"><i style="--p:78%"></i></div>
+            <span class="sui__of">78% of £8,700</span>
+            <div class="sui__acts"><span>+</span><span>↻</span><span>⋯</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Savings goals" data-tabs>
+        <button class="tab is-active" role="tab" aria-selected="true">Travel</button>
+        <button class="tab" role="tab" aria-selected="false">Home</button>
+        <button class="tab" role="tab" aria-selected="false">Celebrate</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CARDS (dark · zoom morph) ============ -->
+  <section class="dsec dsec--zoom" id="cards" data-morph="zoom" aria-label="Cards">
+    <div class="dsec__inner">
+      <div class="panes">
+        <div class="pane is-active" data-pane="0">
+          <div class="dsec__copy" data-reveal>
+            <h2 class="h2">Spend that pays you back</h2>
+            <p class="body">Collect Mova Points every time you tap one of our debit cards, then swap them for flights, hotel stays and more. Points terms apply.</p>
+            <p class="fine">Some card designs come with paid plans only. Fees may apply.</p>
+          </div>
+          <a href="#" class="btn btn--light" data-reveal><span class="btn__fx"></span><span>Start collecting</span></a>
+        </div>
+        <div class="pane" data-pane="1">
+          <div class="dsec__copy" data-reveal>
+            <h2 class="h2">Cards on demand</h2>
+            <p class="body">Spin up a virtual card in a tap. Make it single-use, lock it to one shop, or freeze it the second you’re done.</p>
+            <p class="fine">Disposable cards may need a paid plan.</p>
+          </div>
+          <a href="#" class="btn btn--light" data-reveal><span class="btn__fx"></span><span>Make a card</span></a>
+        </div>
+      </div>
+
+      <div class="dsec__visual" data-vw="1000" data-vh="560">
+        <!-- physical: tray of cards -->
+        <div class="vstage pane-vis is-active" data-pane="0">
+          <div class="tray">
+            <div class="tray__rig">
+              <div class="tray__back"></div>
+              <div class="tray__cards">
+                <div class="pc pc--aurora"><span class="pc__brand">mova</span><span class="pc__chip"></span><span class="pc__nfc"></span></div>
+                <div class="pc pc--slate"><span class="pc__brand">mova</span><span class="pc__chip"></span><span class="pc__nfc"></span></div>
+                <div class="pc pc--onyx"><span class="pc__brand">mova</span><span class="pc__chip"></span><span class="pc__nfc"></span></div>
+                <div class="pc pc--plat"><span class="pc__brand">mova</span><span class="pc__chip"></span><span class="pc__nfc"></span></div>
+              </div>
+              <div class="tray__lip"></div>
+            </div>
+          </div>
+        </div>
+        <!-- virtual: phone + floating cards -->
+        <div class="vstage pane-vis" data-pane="1">
+          <div class="vcards">
+            <div class="phone phone--vc"><div class="phone__screen">
+              <span class="ph__label">Cards</span>
+              <div class="ph__row"><span class="ph__dot" style="--c:#8a3cf0"></span>Online shopping<em>Single-use</em></div>
+              <div class="ph__row"><span class="ph__dot" style="--c:#2bb673"></span>Streaming<em>Locked to merchant</em></div>
+              <div class="ph__row"><span class="ph__dot" style="--c:#ff8a3d"></span>Travel bookings<em>Frozen</em></div>
+            </div></div>
+            <div class="vc vc--1"><b>mova</b><span>Virtual</span><em>•• 4821</em></div>
+            <div class="vc vc--2"><b>mova</b><span>Single-use</span><em>•• 0937</em></div>
+            <div class="vc vc--3"><b>mova</b><span>Virtual</span><em>•• 7714</em></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Card types" data-tabs>
+        <button class="tab is-active" role="tab" aria-selected="true">Physical cards</button>
+        <button class="tab" role="tab" aria-selected="false">Virtual cards</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AI ASSISTANT (dark · zoom morph) ============ -->
+  <section class="dsec dsec--zoom" id="pilot" data-morph="zoom" aria-label="AI assistant">
+    <div class="dsec__inner">
+      <div class="dsec__copy" data-reveal>
+        <h2 class="h2">Ask Pilot. Consider it done.</h2>
+        <p class="body">Pilot is the AI assistant built into Mova. Swipe up in the app and ask about spending, bills or savings, day or night.</p>
+      </div>
+      <a href="#" class="btn btn--light" data-reveal><span class="btn__fx"></span><span>Meet Pilot</span></a>
+
+      <div class="dsec__visual" data-vw="1000" data-vh="560">
+        <div class="vstage">
+          <div class="aiorb"><i></i><i></i></div>
+          <div class="phone phone--ai"><div class="phone__screen">
+            <span class="ph__label">Pilot</span>
+            <div class="chat">
+              <p class="bub bub--me">How much did I spend on eating out in May?</p>
+              <p class="bub bub--ai typing"><i></i><i></i><i></i></p>
+              <p class="bub bub--ai">£312.40, which is 18% less than April. Want me to set a £300 budget for June?</p>
+              <p class="bub bub--me">Yes please</p>
+              <p class="bub bub--ai">Done ✓ I’ll give you a nudge when you hit 80%.</p>
+            </div>
+            <div class="ph__input">Ask Pilot anything…</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECURITY (light · two column) ============ -->
+  <section class="secure" aria-label="Security">
+    <div class="secure__in container">
+      <div class="secure__copy" data-in>
+        <h2 class="h2">Protection that never clocks off</h2>
+        <p class="body">Mova Shield checks every payment as it happens, stops suspicious activity before it reaches your balance and keeps a fraud team on call around the clock.</p>
+        <a href="#" class="btn btn--dark"><span class="btn__fx"></span><span>How we protect you</span></a>
+      </div>
+      <div class="secure__vis" aria-hidden="true">
+        <svg class="shield" viewBox="0 0 600 600">
+          <defs>
+            <linearGradient id="sh-rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6f7f9"/><stop offset=".35" stop-color="#9aa0a8"/><stop offset=".55" stop-color="#e9ebee"/><stop offset=".8" stop-color="#6b7078"/><stop offset="1" stop-color="#c9cdd2"/></linearGradient>
+            <linearGradient id="sh-face" x1="0" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#d7dade"/><stop offset=".3" stop-color="#8d939b"/><stop offset=".5" stop-color="#5a5f66"/><stop offset=".72" stop-color="#b5bac0"/><stop offset="1" stop-color="#40444a"/></linearGradient>
+            <linearGradient id="sh-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2e33"/><stop offset="1" stop-color="#0e0f11"/></linearGradient>
+            <linearGradient id="sh-shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <clipPath id="sh-clip"><path d="M300 92 470 150v120c0 104-70 180-170 222-100-42-170-118-170-222V150z"/></clipPath>
+          </defs>
+          <ellipse cx="300" cy="548" rx="150" ry="18" fill="#000" opacity=".12"/>
+          <path d="M300 70 492 136v134c0 118-80 204-192 252-112-48-192-134-192-252V136z" fill="url(#sh-rim)"/>
+          <path d="M300 92 470 150v120c0 104-70 180-170 222-100-42-170-118-170-222V150z" fill="url(#sh-face)"/>
+          <g clip-path="url(#sh-clip)"><rect class="shield__shine" x="-200" y="60" width="180" height="480" fill="url(#sh-shine)" transform="skewX(-18)"/></g>
+          <path d="M214 372V196h40l46 68 46-68h40v176h-38V262l-48 70-48-70v110z" fill="url(#sh-m)"/>
+          <path d="M214 196h40l46 68 46-68h40" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INVEST (dark · zoom morph) ============ -->
+  <section class="dsec dsec--zoom" id="invest" data-morph="zoom" aria-label="Investing">
+    <div class="ticker-wall" aria-hidden="true">
+      <div class="trow"><div class="trow__track">
+        <span>NWT <b class="up">+1.24%</b></span><span>HLO <b class="dn">−0.38%</b></span><span>ATL <b class="up">+2.10%</b></span><span>QRX <b class="up">+0.62%</b></span><span>BRZ <b class="dn">−1.05%</b></span><span>VNT <b class="up">+3.41%</b></span><span>OKA <b class="up">+0.17%</b></span><span>PLM <b class="dn">−0.74%</b></span>
+        <span>NWT <b class="up">+1.24%</b></span><span>HLO <b class="dn">−0.38%</b></span><span>ATL <b class="up">+2.10%</b></span><span>QRX <b class="up">+0.62%</b></span><span>BRZ <b class="dn">−1.05%</b></span><span>VNT <b class="up">+3.41%</b></span><span>OKA <b class="up">+0.17%</b></span><span>PLM <b class="dn">−0.74%</b></span>
+      </div></div>
+      <div class="trow trow--rev"><div class="trow__track">
+        <span>SOLR ETF <b class="up">+0.88%</b></span><span>MDX <b class="up">+1.92%</b></span><span>KIVA <b class="dn">−0.21%</b></span><span>WORLD 100 <b class="up">+0.44%</b></span><span>TRNS <b class="dn">−2.30%</b></span><span>LUMA <b class="up">+0.95%</b></span><span>GRID <b class="up">+1.37%</b></span>
+        <span>SOLR ETF <b class="up">+0.88%</b></span><span>MDX <b class="up">+1.92%</b></span><span>KIVA <b class="dn">−0.21%</b></span><span>WORLD 100 <b class="up">+0.44%</b></span><span>TRNS <b class="dn">−2.30%</b></span><span>LUMA <b class="up">+0.95%</b></span><span>GRID <b class="up">+1.37%</b></span>
+      </div></div>
+      <div class="trow"><div class="trow__track">
+        <span>ORBT <b class="dn">−0.56%</b></span><span>FERN <b class="up">+2.75%</b></span><span>CASK <b class="up">+0.31%</b></span><span>DELT <b class="up">+1.08%</b></span><span>HAVN <b class="dn">−0.92%</b></span><span>TECH 50 <b class="up">+0.67%</b></span><span>ZENO <b class="up">+4.02%</b></span>
+        <span>ORBT <b class="dn">−0.56%</b></span><span>FERN <b class="up">+2.75%</b></span><span>CASK <b class="up">+0.31%</b></span><span>DELT <b class="up">+1.08%</b></span><span>HAVN <b class="dn">−0.92%</b></span><span>TECH 50 <b class="up">+0.67%</b></span><span>ZENO <b class="up">+4.02%</b></span>
+      </div></div>
+    </div>
+    <div class="dsec__inner">
+      <div class="dsec__copy" data-reveal>
+        <h2 class="h2">Invest in what you believe in</h2>
+        <p class="body">Choose from 4,000+ global stocks and ETFs, and trade commission-free within your monthly allowance.²</p>
+        <p class="fine">Capital at risk. Other fees may apply.</p>
+      </div>
+      <a href="#" class="btn btn--light" data-reveal><span class="btn__fx"></span><span>Start investing</span></a>
+
+      <div class="dsec__visual" data-vw="1000" data-vh="560">
+        <div class="vstage">
+          <div class="phone phone--inv"><div class="phone__screen">
+            <span class="ph__label">Portfolio</span>
+            <span class="inv__val">£12,480<small>.22</small></span>
+            <span class="inv__chg">▲ £342.18 (2.82%) today</span>
+            <svg class="inv__chart" viewBox="0 0 220 110" preserveAspectRatio="none">
+              <defs><linearGradient id="inv-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2bd17e" stop-opacity=".35"/><stop offset="1" stop-color="#2bd17e" stop-opacity="0"/></linearGradient></defs>
+              <path class="inv__area" d="M0 88 L14 84 L28 90 L42 76 L56 79 L70 66 L84 70 L98 58 L112 62 L126 48 L140 54 L154 40 L168 44 L182 30 L196 34 L210 20 L220 22 V110 H0Z" fill="url(#inv-fill)"/>
+              <path class="inv__line" d="M0 88 L14 84 L28 90 L42 76 L56 79 L70 66 L84 70 L98 58 L112 62 L126 48 L140 54 L154 40 L168 44 L182 30 L196 34 L210 20 L220 22" fill="none" stroke="#2bd17e" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+            <div class="inv__ranges"><span>1D</span><span class="on">1W</span><span>1M</span><span>1Y</span><span>All</span></div>
+            <div class="inv__row"><i style="--c:#5b7cfa">N</i><span>Northwind Tech<em>NWT</em></span><b class="up">+1.24%</b></div>
+            <div class="inv__row"><i style="--c:#f2a33a">H</i><span>Helio Energy<em>HLO</em></span><b class="dn">−0.38%</b></div>
+            <div class="inv__row"><i style="--c:#25b67a">A</i><span>Atlas Health<em>ATL</em></span><b class="up">+2.10%</b></div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="cta container">
+    <h2 class="h2" data-in>Join 40+ million people banking with Mova</h2>
+    <a href="#" class="btn btn--dark" data-app-modal data-in style="--i:1"><span class="btn__fx"></span><span>Get the app</span></a>
+  </section>
+
+  <!-- ============ FOOTNOTES ============ -->
+  <section class="notes container">
+    <p>¹AER (Annual Equivalent Rate) shows the interest you’d earn over 12 months if interest is compounded and you make no withdrawals. Your rate depends on your plan and the currency you save in. Paid plan fees and the <a href="#">Instant Savings terms</a> apply. On the Apex plan, 4.10% AER (variable) applies to balances up to £150,000, with 3.80% AER (variable) on any amount above that.</p>
+    <p>²INVESTING: the value of your investments can go down as well as up, and you could get back less than you put in.</p>
+    <p>Mova’s investment service is execution-only, so we don’t give advice or personal recommendations. If you’re unsure whether an investment suits you, speak to an independent financial adviser. Past performance isn’t a reliable guide to future returns, and exchange-rate movements can affect what you get back. Trades beyond your monthly allowance carry a fee of 0.30% of the order value (0.15% on Apex). See our <a href="#">fees</a>, <a href="#">terms of business</a> and <a href="#">risk warnings</a> for full details.</p>
+    <p>Mova is a fictional brand created for a design and front-end exercise. It is not a bank, and nothing on this page is a real financial product or offer.</p>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ftr">
+  <div class="ftr__in">
+    <h2 class="ftr__h">Pick your plan</h2>
+    <div class="plans">
+      <a href="#" class="plan"><span class="plan__n">Basic</span><span class="plan__p">Free</span><span class="plan__d">Everything you need for everyday spending</span><span class="plan__go">→</span></a>
+      <a href="#" class="plan"><span class="plan__n">Plus</span><span class="plan__p">£3.49/month</span><span class="plan__d">Extra protection and a few nice perks</span><span class="plan__go">→</span></a>
+      <a href="#" class="plan"><span class="plan__n">Premium</span><span class="plan__p">£7.99/month</span><span class="plan__d">Travel insurance, better rates and priority support</span><span class="plan__go">→</span></a>
+      <a href="#" class="plan"><span class="plan__n">Apex</span><span class="plan__p">£14.99/month</span><span class="plan__d">Our top savings rate, lounge passes and a metal card</span><span class="plan__go">→</span></a>
+    </div>
+
+    <div class="ftr__cols">
+      <div><h3>Accounts</h3><a href="#">Current account</a><a href="#">Joint accounts</a><a href="#">Teen accounts</a><a href="#">Switch to Mova</a></div>
+      <div><h3>Money</h3><a href="#">Savings</a><a href="#">Investing</a><a href="#">Pensions</a><a href="#">Currency exchange</a></div>
+      <div><h3>Cards</h3><a href="#">Debit cards</a><a href="#">Virtual cards</a><a href="#">Mova Points</a><a href="#">Travel</a></div>
+      <div><h3>Business</h3><a href="#">Business accounts</a><a href="#">Card payments</a><a href="#">Expenses</a><a href="#">Pricing</a></div>
+      <div><h3>Company</h3><a href="#">About us</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Blog</a></div>
+      <div><h3>Help</h3><a href="#">Help centre</a><a href="#">Security</a><a href="#">Report fraud</a><a href="#">Accessibility</a></div>
+    </div>
+
+    <div class="ftr__bar">
+      <a href="#" class="logo logo--ftr" aria-label="Mova home">
+        <svg class="logo__mark" viewBox="0 0 28 28" aria-hidden="true"><path d="M4 22V6h3.6l6.4 8.6L20.4 6H24v16h-3.4V11.9l-6.6 8.7-6.6-8.7V22z" fill="currentColor"/></svg>
+        <span>mova</span>
+      </a>
+      <div class="social">
+        <a href="#" aria-label="Social profile 1"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+        <a href="#" aria-label="Social profile 2"><svg viewBox="0 0 20 20"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+        <a href="#" aria-label="Social profile 3"><svg viewBox="0 0 20 20"><rect x="2.5" y="5" width="15" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 8v4l3.5-2z" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="Social profile 4"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 9v5M7 6.5v.1M10 14v-3a2 2 0 0 1 4 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></a>
+      </div>
+    </div>
+
+    <div class="ftr__legal-links">
+      <button class="region"><span aria-hidden="true">🇬🇧</span> United Kingdom</button>
+      <a href="#">Terms</a><a href="#">Privacy</a><a href="#">Cookies</a><a href="#">Complaints</a><a href="#">Modern slavery statement</a><a href="#">Accessibility</a>
+    </div>
+
+    <div class="ftr__legal">
+      <p>© Mova 2026. This is a concept site.</p>
+      <p>Mova and every product, plan, rate, award and figure on this page are invented for a front-end design exercise. Mova is not authorised or regulated by any financial authority and does not take deposits, issue cards or provide investment services.</p>
+      <p>This page is a non-commercial replica of the Revolut homepage, made as a learning exercise. It isn’t affiliated with or endorsed by Revolut, and all rights and credit for the original design belong to Revolut Ltd. Please don’t enter real personal or financial information anywhere on this site.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ APP MODAL ============ -->
+<div class="modal" id="app-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__card">
+    <button class="modal__x" aria-label="Close" data-close>
+      <svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <h2 id="modal-title" class="modal__h">Get the Mova app</h2>
+    <p class="modal__p">Point your phone’s camera at the code to download the app and open an account in minutes.</p>
+    <div class="qr" aria-label="Decorative QR code placeholder"></div>
+    <p class="modal__fine">Placeholder code. It doesn’t link anywhere.</p>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
