@@ -1,20 +1,26 @@
 /* =========================================================
    Mova — motion + interaction
-   Pattern (measured on the reference): sections are NOT pinned.
-   Each big moment is a time-based tween that PLAYS when a scroll
-   threshold is crossed and REVERSES when you scroll back past it.
+
+   Scroll "moments" (hero → payday, and each dark section):
+   when a scroll gesture would carry the page past a moment's anchor,
+   the viewport is HELD at that anchor, the morph plays in full, and
+   only then does scrolling resume. Scrolling back up past the anchor
+   holds again and plays the morph in reverse.
    ========================================================= */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasGsap = typeof window.gsap !== 'undefined';
-  if (!hasGsap) document.documentElement.classList.add('no-gsap');
+  const root = document.documentElement;
+  if (!hasGsap) root.classList.add('no-gsap');
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   /* ---------------- Header ---------------- */
   const hdr = $('#hdr');
   let lastY = scrollY;
   const menuOpen = () => document.body.classList.contains('menu-open');
+  const modalOpen = () => document.body.classList.contains('modal-open');
 
   function syncHeaderTheme() {
     const p = heroTl ? heroTl.progress() : 0;
@@ -68,12 +74,10 @@
   const heroCopy = $('.hero__copy');
   const salary = $('.salary__copy');
   let heroTl = null;
-  let heroOpen = scrollY > 2;
+  let heroOpen = scrollY > 0;
 
   function buildHero() {
     if (!hasGsap) return;
-    const prog = heroTl ? heroTl.progress() : (heroOpen ? 1 : 0);
-    const wasReversed = heroTl ? heroTl.reversed() : false;
     if (heroTl) heroTl.kill();
     gsap.set([scene, media, heroCopy, salary, sides, outline, ...stages], { clearProps: 'transform,opacity,clipPath,transformOrigin' });
 
@@ -115,41 +119,41 @@
       .to(sides, { scale: 1, duration: 1 }, 0.15)
       .to(salary, { y: 0, scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' }, 0.6);
 
-    heroTl.progress(prog);
-    if (wasReversed && prog > 0 && prog < 1) heroTl.reverse();
-    else if (heroOpen && prog < 1) heroTl.play();
-  }
-
-  function onHeroScroll() {
-    if (!heroTl) return;
-    const y = scrollY;
-    if (y > 2 && !heroOpen) {
-      heroOpen = true;
-      reduce ? heroTl.progress(1) : heroTl.timeScale(1).play();
-    } else if (y <= 2 && heroOpen) {
-      heroOpen = false;
-      reduce ? heroTl.progress(0) : heroTl.timeScale(1.15).reverse();
-    }
+    heroTl.progress(heroOpen ? 1 : 0);
   }
 
   /* ---------------- Dark sections ---------------- */
   const dsecs = $$('.dsec');
   const dState = new Map();
-  const TRIGGER = 0.1; // section top crosses 10% of viewport
+  const secTop = sec => Math.round(sec.getBoundingClientRect().top + scrollY);
 
-  function fitVisuals() {
+  // Size each dark section's content so the whole composition fits the
+  // viewport while it's held (heading at the top, tabs at the bottom).
+  function fitSections() {
+    const vh = innerHeight;
     $$('.dsec__visual').forEach(v => {
-      const bw = +v.dataset.vw || 1000;
-      const vs = Math.max(0.68, Math.min(1, v.clientWidth / bw));
+      const sec = v.closest('.dsec');
+      const bw = +v.dataset.vw || 1000, bh = +v.dataset.vh || 560;
+      const hasTabs = !!$('.tabs', sec);
+      const avail = vh - v.offsetTop - (hasTabs ? 40 : 0);
+      const vs = Math.max(0.6, Math.min(1, v.clientWidth / bw, avail / bh));
       v.style.setProperty('--vs', vs.toFixed(4));
+    });
+    $$('.dsec--clip').forEach(sec => {
+      const card = $('.dsec__card', sec), inner = $('.dsec__inner', sec);
+      card.style.setProperty('--cs', 1);
+      inner.style.minHeight = '0px';
+      const over = inner.offsetHeight - vh;
+      inner.style.minHeight = '';
+      const cs = over > 0 ? Math.max(0.62, (359 - over) / 359) : 1;
+      card.style.setProperty('--cs', cs.toFixed(4));
     });
   }
 
   function buildDsec(sec) {
     if (!hasGsap) return;
     const prev = dState.get(sec);
-    const prog = prev ? prev.tl.progress() : 0;
-    const active = prev ? prev.active : sec.getBoundingClientRect().top <= innerHeight * TRIGGER;
+    const played = prev ? prev.played : scrollY >= secTop(sec) - 1;
     if (prev) prev.tl.kill();
 
     const reveals = $$('[data-reveal]', sec).filter(el => !el.closest('.pane') || el.closest('.pane.is-active'));
@@ -164,9 +168,10 @@
       const sr = sec.getBoundingClientRect(), cr = card.getBoundingClientRect();
       const top = cr.top - sr.top, left = cr.left - sr.left;
       const k = Math.max(cr.width / W, cr.height / H);
+      const cs = +getComputedStyle(card).getPropertyValue('--cs') || 1;
       gsap.set(sc, { transformOrigin: `${W / 2}px ${H / 2}px` });
       gsap.set(m, { clipPath: 'inset(0px 0px 0px 0px round 0px)' });
-      gsap.set(ui, { opacity: 0, y: 12 });
+      gsap.set(ui, { scale: cs, transformOrigin: '0% 0%', opacity: 0, y: 12 });
       tl.to(m, { clipPath: `inset(${top}px ${W - left - cr.width}px ${H - top - cr.height}px ${left}px round 22.5px)`, duration: 1.15 }, 0)
         .to(sc, { scale: k, x: left + cr.width / 2 - W / 2, y: top + cr.height / 2 - H / 2, duration: 1.15 }, 0)
         .to(ui, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.75);
@@ -201,25 +206,9 @@
         .to(area, { opacity: 1, duration: 0.8 }, 1.4);
     }
 
-    tl.progress(prog);
-    const st = { tl, active };
-    dState.set(sec, st);
-    if (active && prog < 1) tl.play();
-  }
-
-  function onDsecScroll() {
-    const vh = innerHeight;
-    dsecs.forEach(sec => {
-      const st = dState.get(sec);
-      if (!st) return;
-      const on = sec.getBoundingClientRect().top <= vh * TRIGGER;
-      if (on === st.active) return;
-      st.active = on;
-      sec.classList.toggle('is-active', on);
-      if (reduce) st.tl.progress(on ? 1 : 0);
-      else on ? st.tl.timeScale(1).play() : st.tl.timeScale(1.2).reverse();
-      if (sec.id === 'pilot') on ? playChat() : resetChat();
-    });
+    tl.progress(played ? 1 : 0);
+    dState.set(sec, { tl, played });
+    sec.classList.toggle('is-active', played);
   }
 
   /* AI chat sequence */
@@ -244,6 +233,185 @@
       .to(q2, pop, '+=0.7')
       .to(a2, pop, '+=0.6');
     if (reduce) chatTl.progress(1);
+  }
+
+  /* =========================================================
+     Scroll moments + viewport hold
+     ========================================================= */
+  const moments = [
+    {
+      name: 'hero',
+      anchor: () => 0,
+      played: () => heroOpen,
+      set: v => { heroOpen = v; },
+      tl: () => heroTl
+    },
+    ...dsecs.map(sec => ({
+      name: sec.id,
+      anchor: () => secTop(sec),
+      played: () => !!dState.get(sec)?.played,
+      set: v => { const st = dState.get(sec); if (st) st.played = v; sec.classList.toggle('is-active', v); },
+      tl: () => dState.get(sec)?.tl,
+      start: dir => { if (sec.id === 'pilot' && dir > 0) playChat(); },
+      end: dir => { if (sec.id === 'pilot' && dir < 0) resetChat(); }
+    }))
+  ];
+
+  const hold = { on: false, y: 0, snap: null, safety: 0 };
+  let lastWheelAt = 0;
+
+  function holdAt(y, smooth) {
+    hold.on = true;
+    root.classList.add('is-held');
+    clearTimeout(hold.safety);
+    hold.safety = setTimeout(() => release(true), 4000);
+    if (hold.snap) hold.snap.kill();
+    const from = scrollY;
+    if (!smooth || reduce || !hasGsap || Math.abs(from - y) < 2) {
+      hold.y = y;
+      scrollTo(0, y);
+      return;
+    }
+    // glide the last few pixels onto the anchor, then stay put
+    const o = { y: from };
+    hold.y = from;
+    hold.snap = gsap.to(o, {
+      y,
+      duration: Math.min(0.6, 0.28 + Math.abs(y - from) / 2200),
+      ease: 'power2.out',
+      onUpdate: () => { hold.y = Math.round(o.y); scrollTo(0, hold.y); }
+    });
+  }
+
+  function release(force) {
+    if (!hold.on) return;
+    // let the gesture that triggered the hold (incl. trackpad inertia)
+    // die out first, so it doesn't fling the page the moment we let go
+    if (!force && performance.now() - lastWheelAt < 160) { setTimeout(release, 80); return; }
+    hold.on = false;
+    clearTimeout(hold.safety);
+    if (hold.snap) { hold.snap.kill(); hold.snap = null; }
+    root.classList.remove('is-held');
+    lastY = fbPrevY = scrollY;
+  }
+
+  function runTl(tl, forward) {
+    return new Promise(res => {
+      if (!tl) return res();
+      tl.eventCallback('onComplete', null);
+      tl.eventCallback('onReverseComplete', null);
+      if (reduce) { tl.progress(forward ? 1 : 0); return res(); }
+      if (forward ? tl.progress() === 1 : tl.progress() === 0) return res();
+      tl.eventCallback(forward ? 'onComplete' : 'onReverseComplete', res);
+      forward ? tl.timeScale(1).play() : tl.timeScale(1.15).reverse();
+    });
+  }
+
+  function run(m, dir, smooth) {
+    m.set(dir > 0);
+    holdAt(m.anchor(), smooth);
+    m.start && m.start(dir);
+    runTl(m.tl(), dir > 0).then(() => {
+      m.end && m.end(dir);
+      release();
+    });
+  }
+
+  // Would a scroll of `delta` (sign = dir) carry us onto/past a moment's
+  // anchor? If so, start that moment and tell the caller to swallow input.
+  function intent(dir, delta) {
+    if (hold.on) return true;
+    if (!hasGsap || menuOpen() || modalOpen()) return false;
+    const y = scrollY;
+    const list = dir > 0 ? moments : [...moments].reverse();
+    for (const m of list) {
+      const a = m.anchor();
+      if (dir > 0 && !m.played()) {
+        if (Math.abs(y - a) <= 1) { run(m, 1, false); return true; }
+        if (y < a && y + delta >= a) { run(m, 1, true); return true; }
+      }
+      if (dir < 0 && m.played()) {
+        if (Math.abs(y - a) <= 1) { run(m, -1, false); return true; }
+        if (y > a && y + delta <= a) { run(m, -1, true); return true; }
+      }
+    }
+    return false;
+  }
+
+  // Put every moment in the state that matches the scroll position,
+  // without animating (used on load and after big jumps).
+  function syncMoments(skipHero) {
+    const y = scrollY;
+    moments.forEach(m => {
+      if (skipHero && m.name === 'hero') return;
+      const should = m.name === 'hero' ? y > 0 : y >= m.anchor() - 1;
+      if (should === m.played()) return;
+      m.set(should);
+      const tl = m.tl();
+      if (tl) tl.progress(should ? 1 : 0);
+      if (m.name === 'pilot') should ? playChat() : resetChat();
+    });
+    syncHeaderTheme();
+  }
+
+  /* Input: wheel / trackpad */
+  addEventListener('wheel', e => {
+    lastWheelAt = performance.now();
+    if (e.ctrlKey) return; // pinch-zoom
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+    if (!dy) { if (hold.on) e.preventDefault(); return; }
+    if (intent(Math.sign(dy), dy)) e.preventDefault();
+  }, { passive: false });
+
+  /* Input: touch */
+  let touchY = null;
+  addEventListener('touchstart', e => { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
+  addEventListener('touchmove', e => {
+    if (hold.on) { if (e.cancelable) e.preventDefault(); return; }
+    if (touchY == null) return;
+    const y = e.touches[0].clientY;
+    const dy = touchY - y; // > 0 means the page would scroll down
+    if (Math.abs(dy) < 3) return;
+    touchY = y;
+    if (intent(Math.sign(dy), dy) && e.cancelable) e.preventDefault();
+  }, { passive: false });
+  addEventListener('touchend', () => { touchY = null; }, { passive: true });
+
+  /* Input: keyboard */
+  addEventListener('keydown', e => {
+    const t = e.target;
+    if (t && (/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(t.tagName) || t.isContentEditable || t.getAttribute?.('role') === 'tab')) return;
+    const steps = { ArrowDown: 40, ArrowUp: -40, PageDown: innerHeight * 0.85, PageUp: -innerHeight * 0.85, ' ': (e.shiftKey ? -1 : 1) * innerHeight * 0.85 };
+    if (hold.on && (e.key in steps || e.key === 'Home' || e.key === 'End')) { e.preventDefault(); return; }
+    const delta = steps[e.key];
+    if (delta && intent(Math.sign(delta), delta)) e.preventDefault();
+  });
+
+  /* Fallback: scrollbar drags, touch momentum, find-in-page, anchors */
+  let fbPrevY = scrollY;
+  function onScrollFallback() {
+    const y = scrollY, prev = fbPrevY;
+    fbPrevY = y;
+    if (hold.on) {
+      if (Math.abs(y - hold.y) > 1) scrollTo(0, hold.y);
+      fbPrevY = hold.y;
+      return;
+    }
+    if (!hasGsap || menuOpen() || modalOpen() || y === prev) return;
+    if (Math.abs(y - prev) > innerHeight * 1.2) {
+      // big jump: don't drag the user back, just match states —
+      // except landing on the very top, where the hero reverse is shown
+      if (y <= 0 && heroOpen) { syncMoments(true); run(moments[0], -1, false); }
+      else syncMoments();
+      return;
+    }
+    const dir = y > prev ? 1 : -1;
+    const list = dir > 0 ? moments : [...moments].reverse();
+    for (const m of list) {
+      const a = m.anchor();
+      if (dir > 0 && !m.played() && prev < a && y >= a) { run(m, 1, true); return; }
+      if (dir < 0 && m.played() && prev > a && y <= a) { run(m, -1, true); return; }
+    }
   }
 
   /* ---------------- Tabs ---------------- */
@@ -356,19 +524,19 @@
     ticking = true;
     requestAnimationFrame(() => {
       ticking = false;
+      onScrollFallback();
       onHeaderScroll();
-      onHeroScroll();
-      onDsecScroll();
       onShieldScroll();
     });
   }
   addEventListener('scroll', onScroll, { passive: true });
 
   function buildAll() {
-    fitVisuals();
+    // a rebuild mid-morph lands the morph on its end state
+    if (hold.on) release(true);
+    fitSections();
     buildHero();
     dsecs.forEach(buildDsec);
-    dsecs.forEach(sec => sec.classList.toggle('is-active', !!(dState.get(sec) || {}).active));
     syncHeaderTheme();
     onShieldScroll();
   }
@@ -388,7 +556,10 @@
   buildAll.h = innerHeight;
   resetChat();
   buildAll();
-  if (dState.get($('#pilot'))?.active) playChat();
+  if (dState.get($('#pilot'))?.played) playChat();
   // fonts change text heights → rebuild geometry once they land
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildAll);
+
+  // test hook (read-only): lets automated checks see hold state
+  window.__mova = { get held() { return hold.on; }, moments: () => moments.map(m => ({ name: m.name, played: m.played(), anchor: m.anchor() })) };
 })();
