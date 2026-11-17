@@ -66,9 +66,11 @@
     lineGrad.addColorStop(0.42, 'rgba(255, 255, 255, 0.34)');
     lineGrad.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
     glowGrad = ctx.createLinearGradient(0, 0, 0, H);
-    glowGrad.addColorStop(0, 'rgba(60, 106, 184, 0.9)');
-    glowGrad.addColorStop(0.16, 'rgba(42, 76, 138, 0.5)');
-    glowGrad.addColorStop(0.46, 'rgba(25, 28, 31, 0)');
+    // brightest band sits a little below the top, where the fade-in mask lets it through
+    glowGrad.addColorStop(0, 'rgba(60, 106, 184, 0.95)');
+    glowGrad.addColorStop(0.2, 'rgba(56, 100, 176, 0.8)');
+    glowGrad.addColorStop(0.36, 'rgba(42, 76, 138, 0.42)');
+    glowGrad.addColorStop(0.62, 'rgba(25, 28, 31, 0)');
     return true;
   }
 
